@@ -1,0 +1,48 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    background-color: rgb(164, 182, 137);
+}
+
+#container {
+    border: solid black 1px;
+    border-radius: 20px;
+    padding: 10px;
+    background-color: rgba(77, 201, 39, 0.733);
+    width: fit-content;
+    margin: 0 auto;
+    max-width: 60%;
+}
+
+#todo-list {
+    list-style-type: none;
+    display: flex;
+    flex-flow: column;
+}
+
+#todo-list li {
+    color: rgb(58, 47, 29);
+    font-size: large;
+    font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+        sans-serif;
+    text-align: center;
+    border: 1px solid rgb(115, 165, 86);
+    margin-top: 5px;
+    border-radius: 5px;
+    background-color: rgb(235, 172, 55);
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+#form {
+    margin-top: 20px;
+}
+
+#form #text-input {
+}

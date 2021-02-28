@@ -9,14 +9,33 @@ async function fetchList() {
         .catch((err) => console.log(err));
 }
 
+function putInList(todo) {
+    const node = document.createElement("li");
+
+    const paragraph = document.createElement("p");
+    paragraph.innerText = todo.data;
+    node.appendChild(paragraph);
+
+    const edit_button = document.createElement("button");
+    edit_button.innerText = "Edit";
+    edit_button.className = "edit-button";
+
+    const delete_button = document.createElement("button");
+    delete_button.innerText = "Delete";
+    delete_button.className = "delete-button";
+
+    node.appendChild(edit_button);
+    node.appendChild(delete_button);
+
+    document.getElementById("todo-list").appendChild(node);
+}
+
 async function putList() {
     const list = await fetchList();
 
     // put every element of fetched list into todo-list <ul>
     list.forEach((element) => {
-        let node = document.createElement("li");
-        node.innerText = element.data;
-        document.getElementById("todo-list").appendChild(node);
+        putInList(element);
     });
 }
 
@@ -42,16 +61,18 @@ function addSubmitListener() {
         // prevents from redirecting
         event.preventDefault();
 
-        // create and insert node == <li> text-input-value </li> into <ul>
-        let node = document.createElement("li");
-        node.innerText = document.getElementById("text-input").value;
-        document.getElementById("todo-list").appendChild(node);
+        const todo = { data: document.getElementById("text-input").value };
 
         // clear text-input after submit
         document.getElementById("text-input").value = "";
 
+        // create and insert node == <li> text-input-value </li> into <ul>
+        putInList(todo);
+
+        // document.getElementById("todo-list").appendChild(node);
+
         // send list item to server so it can insert it into mongodb
-        const todo = { data: node.innerText };
+
         insertTodo(todo);
     });
 }
