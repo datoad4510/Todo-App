@@ -10,7 +10,8 @@ app.use(express.static("public"));
 app.use(cors());
 app.use(bodyParser.json());
 
-const MongoClient = require("mongodb").MongoClient;
+const mongodb = require("mongodb");
+const MongoClient = mongodb.MongoClient;
 const url =
     "mongodb+srv://dato:Irakli58@cluster0.m8xlq.mongodb.net/test?retryWrites=true&w=majority";
 
@@ -51,14 +52,33 @@ app.post("/add_item", (req, res) => {
     client.connect((err) => {
         const collection = client.db("test").collection("list-items");
         try {
-            collection.insertOne(list_item);
+            collection.insertOne(list_item).then((data) => {
+                res.send(data.insertedId);
+            });
             console.log(`Inserted ${list_item.data}`);
         } catch (error) {
             throw error;
         }
     });
     client.close();
-    res.send(`Got a new list item ${list_item.data}`);
+});
+app.post("/delete_item", (req, res) => {
+    //insert item into database
+    const delete_id = req.body._id;
+    const client = new MongoClient(url, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
+    client.connect((err) => {
+        const collection = client.db("test").collection("list-items");
+        try {
+            collection.deleteOne({ _id: new mongodb.ObjectID(delete_id) });
+            console.log(`Deleted ${delete_id}`);
+        } catch (error) {
+            throw error;
+        }
+    });
+    client.close();
 });
 
 app.listen(port, () => {
