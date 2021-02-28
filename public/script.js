@@ -25,18 +25,18 @@ function putInList(todo) {
     const delete_button = document.createElement("button");
     delete_button.innerText = "Delete";
     delete_button.className = "delete-button";
-    delete_button.addEventListener("click", (event) => {
+    delete_button.addEventListener("click", async (event) => {
+        await deleteTodo({ _id: node.id });
         node.remove();
-        deleteTodo({ _id: node.id });
     });
 
     const finished_checkbox = document.createElement("input");
     finished_checkbox.type = "checkbox";
     finished_checkbox.className = "finished-checkbox";
     finished_checkbox.checked = todo.finished;
-    finished_checkbox.addEventListener("click", (event) => {
+    finished_checkbox.addEventListener("click", async (event) => {
+        await updateTodo({ _id: node.id, finished: finished_checkbox.checked });
         paragraph.classList.toggle("finished");
-        updateTodo({ _id: node.id, finished: finished_checkbox.checked });
     });
 
     // for initial style
@@ -78,7 +78,7 @@ async function insertTodo(todo) {
 }
 
 async function deleteTodo(todo) {
-    return fetch(`${server}/delete_item`, {
+    fetch(`${server}/delete_item`, {
         method: "POST", // or 'PUT'
         headers: {
             "Content-Type": "application/json",
@@ -90,7 +90,7 @@ async function deleteTodo(todo) {
 }
 
 async function updateTodo(todo) {
-    return fetch(`${server}/update_item`, {
+    fetch(`${server}/update_item`, {
         method: "POST", // or 'PUT'
         headers: {
             "Content-Type": "application/json",
@@ -105,6 +105,9 @@ async function addSubmitListener() {
     document
         .getElementById("form")
         .addEventListener("submit", async (event) => {
+            // why is this slow compared to
+            // deleting and checkbox?
+
             // prevents from redirecting
             event.preventDefault();
 

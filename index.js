@@ -73,7 +73,11 @@ app.post("/delete_item", (req, res) => {
         const collection = client.db("test").collection("list-items");
         try {
             // zedmeti "" aqvs garshemo axlad damatebul delete_id-s
-            collection.deleteOne({ _id: new mongodb.ObjectID(delete_id) });
+            collection
+                .deleteOne({ _id: new mongodb.ObjectID(delete_id) })
+                .then((result) =>
+                    res.send({ deletedCount: result.deletedCount })
+                );
             console.log(`Deleted ${delete_id}`);
         } catch (error) {
             throw error;
@@ -94,10 +98,14 @@ app.post("/update_item", (req, res) => {
         try {
             // update document that has id == delete_id
             // with req.body
-            collection.updateOne(
-                { _id: new mongodb.ObjectID(update_id) },
-                { $set: req.body }
-            );
+            collection
+                .updateOne(
+                    { _id: new mongodb.ObjectID(update_id) },
+                    { $set: req.body }
+                )
+                .then((result) =>
+                    res.send({ modifiedCount: result.modifiedCount })
+                );
             console.log(`Updated ${update_id}`);
         } catch (error) {
             throw error;
