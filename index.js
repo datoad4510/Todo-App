@@ -7,12 +7,7 @@ app.use(cors());
 
 const MongoClient = require("mongodb").MongoClient;
 const url =
-	"mongodb+srv://dato:Irakli58@cluster0.m8xlq.mongodb.net/test?authSource=admin&retryWrites=true&w=majority";
-
-const client = new MongoClient(url, {
-	useNewUrlParser: true,
-	useUnifiedTopology: true,
-});
+	"mongodb+srv://dato:Irakli58@cluster0.m8xlq.mongodb.net/test?retryWrites=true&w=majority";
 
 app.get("/", (req, res) => {
 	// pull list items from server
@@ -22,27 +17,20 @@ app.get("/", (req, res) => {
 app.post("/", (req, res) => {
 	//insert item into database
 	const list_item = req;
-
-	// client.connect((err) => {
-	// 	if (err) throw err;
-	// 	const collection = client.db("test").collection("list-items");
-	// 	// perform actions on the collection object
-	// 	client.close();
-	// });
-
-	MongoClient.connect(url, function (err, db) {
-		if (err) throw err;
-		const dbo = db.db("test");
-		const obj = {
-			data: node.innerText,
-		};
-		dbo.collection("list-items").insertOne(obj, function (err, res) {
-			if (err) throw err;
-			console.log(`1 document inserted ${list_item.data}`);
-			db.close();
-		});
+	console.log(list_item);
+	const client = new MongoClient(url, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
 	});
-
+	client.connect((err) => {
+		const collection = client.db("test").collection("list-items");
+		try {
+			collection.insertOne(list_item);
+		} catch (error) {
+			throw errror;
+		}
+	});
+	client.close();
 	res.send(`Got a new list item ${list_item.data}`);
 });
 
