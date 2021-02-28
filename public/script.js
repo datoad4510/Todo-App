@@ -1,5 +1,5 @@
-// const server = "https://my-todo-app-2344wqs.herokuapp.com";
-const server = "http://localhost:3000";
+const server = "https://my-todo-app-2344wqs.herokuapp.com";
+// const server = "http://localhost:3000";
 
 async function fetchList() {
     // get all todos from server
