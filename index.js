@@ -8,16 +8,34 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const MongoClient = require("mongodb").MongoClient;
-const { response } = require("express");
 const url =
     "mongodb+srv://dato:Irakli58@cluster0.m8xlq.mongodb.net/test?retryWrites=true&w=majority";
 
-app.get("/", (req, res) => {
+app.get("/get_items", (req, res) => {
     // pull list items from server
-    res.send("Hello World!");
+
+    const client = new MongoClient(url, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
+    client.connect((err) => {
+        // get/find all documents in collection
+        client
+            .db("test")
+            .collection("list-items")
+            .find()
+            .toArray((err, result) => {
+                if (err) {
+                    res.send(err);
+                } else {
+                    res.send({ collection: result });
+                }
+            });
+    });
+    client.close();
 });
 
-app.post("/", (req, res) => {
+app.post("/add_item", (req, res) => {
     //insert item into database
     const list_item = req.body;
     const client = new MongoClient(url, {
