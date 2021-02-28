@@ -13,7 +13,7 @@ const url =
 
 app.get("/get_items", (req, res) => {
     // pull list items from server
-
+    res.set("Access-Control-Allow-Origin", "*");
     const client = new MongoClient(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
@@ -37,6 +37,7 @@ app.get("/get_items", (req, res) => {
 
 app.post("/add_item", (req, res) => {
     //insert item into database
+    res.set("Access-Control-Allow-Origin", "*");
     const list_item = req.body;
     const client = new MongoClient(url, {
         useNewUrlParser: true,
