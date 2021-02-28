@@ -72,8 +72,33 @@ app.post("/delete_item", (req, res) => {
     client.connect((err) => {
         const collection = client.db("test").collection("list-items");
         try {
+            // zedmeti "" aqvs garshemo axlad damatebul delete_id-s
             collection.deleteOne({ _id: new mongodb.ObjectID(delete_id) });
             console.log(`Deleted ${delete_id}`);
+        } catch (error) {
+            throw error;
+        }
+    });
+    client.close();
+});
+app.post("/update_item", (req, res) => {
+    //insert item into database
+    const update_id = req.body._id;
+    delete req.body["_id"];
+    const client = new MongoClient(url, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    });
+    client.connect((err) => {
+        const collection = client.db("test").collection("list-items");
+        try {
+            // update document that has id == delete_id
+            // with req.body
+            collection.updateOne(
+                { _id: new mongodb.ObjectID(update_id) },
+                { $set: req.body }
+            );
+            console.log(`Updated ${update_id}`);
         } catch (error) {
             throw error;
         }

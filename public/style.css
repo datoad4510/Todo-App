@@ -44,5 +44,10 @@ body {
     margin-top: 20px;
 }
 
+.finished {
+    color: grey;
+    text-decoration: line-through;
+}
+
 #form #text-input {
 }

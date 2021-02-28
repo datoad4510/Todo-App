@@ -25,9 +25,31 @@ function putInList(todo) {
     const delete_button = document.createElement("button");
     delete_button.innerText = "Delete";
     delete_button.className = "delete-button";
+    delete_button.addEventListener("click", (event) => {
+        deleteTodo({ _id: node.id });
+        node.remove();
+    });
+
+    const finished_checkbox = document.createElement("input");
+    finished_checkbox.type = "checkbox";
+    finished_checkbox.className = "finished-checkbox";
+    finished_checkbox.checked = todo.finished;
+    finished_checkbox.addEventListener("click", (event) => {
+        paragraph.classList.toggle("finished");
+        console.log("aaaaaaaaa");
+        updateTodo({ _id: node.id, finished: finished_checkbox.checked });
+    });
+
+    // for initial style
+    if (finished_checkbox.checked) {
+        paragraph.classList.add("finished");
+    } else {
+        paragraph.classList.remove("finished");
+    }
 
     node.appendChild(edit_button);
     node.appendChild(delete_button);
+    node.appendChild(finished_checkbox);
 
     document.getElementById("todo-list").appendChild(node);
 }
@@ -43,7 +65,7 @@ async function putList() {
 
 // insert todo into mongodb returns id of inserted todo item
 async function insertTodo(todo) {
-    return fetch(`${server}/add_item`, {
+    return await fetch(`${server}/add_item`, {
         method: "POST", // or 'PUT'
         headers: {
             "Content-Type": "application/json",
@@ -51,9 +73,6 @@ async function insertTodo(todo) {
         body: JSON.stringify(todo),
     })
         .then((response) => response.text())
-        .then((text) => {
-            return text;
-        })
         .catch((error) => {
             console.error("Error:", error);
         });
@@ -71,41 +90,52 @@ async function deleteTodo(todo) {
     });
 }
 
-function addSubmitListener() {
-    document.getElementById("form").addEventListener("submit", (event) => {
-        // prevents from redirecting
-        event.preventDefault();
-
-        const todo = { data: document.getElementById("text-input").value };
-
-        // send list item to server so it can insert it into mongodb
-        // and save it's id
-        todo._id = insertTodo(todo);
-
-        // clear text-input after submit
-        document.getElementById("text-input").value = "";
-
-        // render the added list item
-        putInList(todo);
+async function updateTodo(todo) {
+    return fetch(`${server}/update_item`, {
+        method: "POST", // or 'PUT'
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(todo),
+    }).catch((error) => {
+        console.error("Error:", error);
     });
 }
 
-function addDeleteListeners() {
-    const list_items = document.querySelectorAll("#todo-list li");
-    list_items.forEach((element) => {
-        const delete_button = element.querySelector(".delete-button");
-        delete_button.addEventListener("click", (event) => {
-            deleteTodo({ _id: element.id });
-            element.remove();
+async function addSubmitListener() {
+    document
+        .getElementById("form")
+        .addEventListener("submit", async (event) => {
+            // prevents from redirecting
+            event.preventDefault();
+
+            const todo = {
+                data: document.getElementById("text-input").value,
+                finished: false,
+            };
+
+            // send list item to server so it can insert it into mongodb
+            // and save it's id
+            todo._id = await insertTodo(todo);
+
+            // why does it have extra "" around it?? this line is for
+            // pruning to avoid the bug
+            // maybe due to response.text(c)
+            todo._id = todo._id.substring(1, todo._id.length - 1);
+            console.log(todo._id);
+
+            // clear text-input after submit
+            document.getElementById("text-input").value = "";
+
+            // render the added list item
+            putInList(todo);
         });
-    });
 }
+
 
 window.addEventListener("load", async (event) => {
     // get entire list from database
     await putList();
-
-    addDeleteListeners();
 
     // add listener for the submit button
     addSubmitListener();
