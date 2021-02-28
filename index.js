@@ -5,19 +5,7 @@ const path = require("path");
 const app = express();
 const port = process.env.PORT || 3000;
 
-// app.use(express.static(path.join(__dirname, "Scripts")));
-
-// app.use(function (req, res, next) {
-//     res.header(
-//         "Access-Control-Allow-Origin",
-//         "https://datoad4510.github.io/Todo-App/"
-//     ); // update to match the domain you will make the request from
-//     res.header(
-//         "Access-Control-Allow-Headers",
-//         "Origin, X-Requested-With, Content-Type, Accept"
-//     );
-//     next();
-// });
+app.use(express.static("public"));
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -27,7 +15,7 @@ const url =
     "mongodb+srv://dato:Irakli58@cluster0.m8xlq.mongodb.net/test?retryWrites=true&w=majority";
 
 app.get("/", (req, res) => {
-    res.sendFile(__dirname + "/index.html");
+    res.sendFile(__dirname + "/public/index.html");
 });
 
 app.get("/get_items", (req, res) => {
