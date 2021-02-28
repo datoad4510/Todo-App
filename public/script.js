@@ -26,8 +26,8 @@ function putInList(todo) {
     delete_button.innerText = "Delete";
     delete_button.className = "delete-button";
     delete_button.addEventListener("click", (event) => {
-        deleteTodo({ _id: node.id });
         node.remove();
+        deleteTodo({ _id: node.id });
     });
 
     const finished_checkbox = document.createElement("input");
@@ -36,7 +36,6 @@ function putInList(todo) {
     finished_checkbox.checked = todo.finished;
     finished_checkbox.addEventListener("click", (event) => {
         paragraph.classList.toggle("finished");
-        console.log("aaaaaaaaa");
         updateTodo({ _id: node.id, finished: finished_checkbox.checked });
     });
 
@@ -131,7 +130,6 @@ async function addSubmitListener() {
             putInList(todo);
         });
 }
-
 
 window.addEventListener("load", async (event) => {
     // get entire list from database
