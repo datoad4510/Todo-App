@@ -1,3 +1,6 @@
+// https://www.reddit.com/r/javascript/comments/7jc7fy/what_is_wrong_with_return_await_when_you_want_to/
+// http://hassansin.github.io/Why-return-await-Is-a-Bad-Idea
+
 const server = "https://my-todo-app-2344wqs.herokuapp.com";
 // const server = "http://localhost:3000";
 
@@ -26,6 +29,8 @@ function putInList(todo) {
     delete_button.innerText = "Delete";
     delete_button.className = "delete-button";
     delete_button.addEventListener("click", async (event) => {
+        // if you remove this await, ui will update first
+        // will fill faster, may be more unreliable
         await deleteTodo({ _id: node.id });
         node.remove();
     });
@@ -35,6 +40,8 @@ function putInList(todo) {
     finished_checkbox.className = "finished-checkbox";
     finished_checkbox.checked = todo.finished;
     finished_checkbox.addEventListener("click", async (event) => {
+        // if you remove this await, ui will update first
+        // will fill faster, may be more unreliable
         await updateTodo({ _id: node.id, finished: finished_checkbox.checked });
         paragraph.classList.toggle("finished");
     });
@@ -64,7 +71,7 @@ async function putList() {
 
 // insert todo into mongodb returns id of inserted todo item
 async function insertTodo(todo) {
-    return await fetch(`${server}/add_item`, {
+    return fetch(`${server}/add_item`, {
         method: "POST", // or 'PUT'
         headers: {
             "Content-Type": "application/json",
@@ -78,19 +85,24 @@ async function insertTodo(todo) {
 }
 
 async function deleteTodo(todo) {
-    fetch(`${server}/delete_item`, {
-        method: "POST", // or 'PUT'
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(todo),
-    }).catch((error) => {
-        console.error("Error:", error);
-    });
+    return (
+        fetch(`${server}/delete_item`, {
+            method: "POST", // or 'PUT'
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(todo),
+        })
+            //.then((res) => res.json())
+            //.then((json) => json.deletedCount)
+            .catch((error) => {
+                console.error("Error:", error);
+            })
+    );
 }
 
 async function updateTodo(todo) {
-    fetch(`${server}/update_item`, {
+    return fetch(`${server}/update_item`, {
         method: "POST", // or 'PUT'
         headers: {
             "Content-Type": "application/json",
@@ -105,9 +117,6 @@ async function addSubmitListener() {
     document
         .getElementById("form")
         .addEventListener("submit", async (event) => {
-            // why is this slow compared to
-            // deleting and checkbox?
-
             // prevents from redirecting
             event.preventDefault();
 
