@@ -45,6 +45,10 @@ body {
 #todo-list li p {
     margin-bottom: 5px;
 }
+#todo-list li button,
+input[type="checkbox"] {
+    margin-left: 5px;
+}
 
 #form {
     width: fit-content;
