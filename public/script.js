@@ -53,8 +53,14 @@ function putInList(todo) {
         paragraph.classList.remove("finished");
     }
 
+    const datetime_input = document.createElement("input");
+    datetime_input.type = "datetime-local";
+    datetime_input.class = "datetime-input";
+    datetime_input.name = "to-finish-time";
+
     node.appendChild(edit_button);
     node.appendChild(delete_button);
+    node.appendChild(datetime_input);
     node.appendChild(finished_checkbox);
 
     document.getElementById("todo-list").appendChild(node);

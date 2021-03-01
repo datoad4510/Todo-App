@@ -46,7 +46,8 @@ body {
     margin-bottom: 5px;
 }
 #todo-list li button,
-input[type="checkbox"] {
+input[type="checkbox"],
+input[type="datetime-local"] {
     margin-left: 5px;
 }
 
