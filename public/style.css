@@ -56,6 +56,11 @@ input[type="datetime-local"] {
         font-size: 0.7rem;
     }
 }
+@media only screen and (max-width: 350px) {
+    input[type="datetime-local"] {
+        font-size: 0.6rem;
+    }
+}
 
 #form {
     width: fit-content;
@@ -66,6 +71,10 @@ input[type="datetime-local"] {
 .finished {
     color: grey;
     text-decoration: line-through;
+}
+
+#submit {
+    margin: 0 auto;
 }
 
 #form #text-input {
