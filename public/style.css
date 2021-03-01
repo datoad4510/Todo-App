@@ -40,6 +40,7 @@ body {
     padding-right: 5%;
     padding-top: 5px;
     padding-bottom: 5px;
+    width: fit-content;
 }
 
 #todo-list li p {
