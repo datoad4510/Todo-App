@@ -24,7 +24,6 @@ body {
     list-style-type: none;
     display: flex;
     flex-flow: column;
-    width: fit-content;
 }
 
 #todo-list li {
@@ -41,7 +40,6 @@ body {
     padding-right: 5%;
     padding-top: 5px;
     padding-bottom: 5px;
-    width: fit-content;
 }
 
 #todo-list li p {
@@ -51,6 +49,12 @@ body {
 input[type="checkbox"],
 input[type="datetime-local"] {
     margin-left: 5px;
+}
+
+@media only screen and (max-width: 450px) {
+    input[type="datetime-local"] {
+        font-size: 0.7rem;
+    }
 }
 
 #form {
