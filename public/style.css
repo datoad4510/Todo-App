@@ -10,7 +10,7 @@ body {
     background-color: rgb(164, 182, 137);
 }
 
-#container {
+#container, #edit-container {
     border: solid black 1px;
     border-radius: 20px;
     padding: 10px;
