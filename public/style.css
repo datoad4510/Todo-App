@@ -79,3 +79,7 @@ input[type="datetime-local"] {
 
 #form #text-input {
 }
+
+.display-none {
+    display: none;
+}

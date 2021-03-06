@@ -21,10 +21,6 @@ function putInList(todo) {
     paragraph.innerText = todo.data;
     node.appendChild(paragraph);
 
-    const edit_button = document.createElement("button");
-    edit_button.innerText = "Edit";
-    edit_button.className = "edit-button";
-
     const delete_button = document.createElement("button");
     delete_button.innerText = "Delete";
     delete_button.className = "delete-button";
@@ -53,10 +49,86 @@ function putInList(todo) {
         paragraph.classList.remove("finished");
     }
 
-    const datetime_input = document.createElement("input");
-    datetime_input.type = "datetime-local";
-    datetime_input.class = "datetime-input";
-    datetime_input.name = "to-finish-time";
+    const datetime_input = document.createElement("span");
+    datetime_input.className = "time-span";
+    datetime_input.innerText = new Date(todo.time).toLocaleString();
+    console.log(new Date(datetime_input.innerText));
+
+    const edit_button = document.createElement("button");
+    edit_button.innerText = "Edit";
+    edit_button.className = "edit-button";
+    edit_button.addEventListener("click", async (event) => {
+        // get fresh data, because it might've changed due to previous edits
+        let this_todo = document.getElementById(node.id);
+        let this_paragraph = this_todo.getElementsByTagName("p")[0];
+        let this_date = this_todo.getElementsByTagName("span")[0];
+
+        // make list container invisible
+        const container = document.getElementById("container");
+        container.classList.toggle("display-none");
+
+        // make edit-container visible
+        const edit_container = document.getElementById("edit-container");
+        edit_container.classList.toggle("display-none");
+
+        // add text to be edited
+        const edit_text = document.createElement("input");
+        edit_text.type = "text";
+        edit_text.id = "edit-text";
+        edit_text.value = this_paragraph.innerText;
+        edit_container.appendChild(edit_text);
+
+        // add date to be edited
+        const edit_datetime_local = document.createElement("input");
+        edit_datetime_local.type = "datetime-local";
+        edit_datetime_local.value = this_date.innerText;
+        edit_container.appendChild(edit_datetime_local);
+
+        // add save button
+        const save_button = document.createElement("input");
+        save_button.type = "button";
+        save_button.id = "save-button";
+        save_button.value = "Save";
+        save_button.addEventListener("click", async (event) => {
+            try {
+                // if you remove this await, ui will update first
+                // will fill faster, may be more unreliable
+                await updateTodo({
+                    _id: node.id,
+                    data: edit_text.value,
+                    time: edit_datetime_local.value,
+                });
+            } catch (err) {
+                throw err;
+            }
+
+            // get fresh data, because it might've changed due to previous edits
+            this_todo = document.getElementById(node.id);
+            this_paragraph = this_todo.getElementsByTagName("p")[0];
+            this_date = this_todo.getElementsByTagName("span")[0];
+
+            // update ui
+            this_paragraph.innerText = edit_text.value;
+            this_date.innerText = edit_datetime_local.value;
+
+            // make list container invisible
+            container.classList.toggle("display-none");
+
+            // delete contents of edit container
+            // https://stackoverflow.com/questions/48310643/removing-childnodes-using-node-childnodes-foreach
+            const children = edit_container.childNodes;
+
+            // iterate backwards, explained in the link
+            for (let index = children.length - 1; index >= 0; index--) {
+                children[index].remove();
+            }
+
+            // make edit-container visible
+            edit_container.classList.toggle("display-none");
+        });
+
+        edit_container.appendChild(save_button);
+    });
 
     node.appendChild(edit_button);
     node.appendChild(delete_button);
@@ -128,6 +200,7 @@ async function addSubmitListener() {
 
             const todo = {
                 data: document.getElementById("text-input").value,
+                time: document.getElementById("time-input").value,
                 finished: false,
             };
 
@@ -143,6 +216,7 @@ async function addSubmitListener() {
 
             // clear text-input after submit
             document.getElementById("text-input").value = "";
+            document.getElementById("time-input").value = "";
 
             // render the added list item
             putInList(todo);
