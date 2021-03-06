@@ -118,7 +118,9 @@ function putInList(todo) {
 
             // update ui
             this_paragraph.innerText = edit_text.value;
-            this_date.innerText = edit_datetime_local.value || "Invalid Date";
+            this_date.innerText = new Date(
+                edit_datetime_local.value
+            ).toLocaleString();
 
             // make list container invisible
             container.classList.toggle("display-none");
