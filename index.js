@@ -14,7 +14,7 @@ const mongodb = require("mongodb");
 const MongoClient = mongodb.MongoClient;
 const url =
     "mongodb+srv://dato:Irakli58@cluster0.m8xlq.mongodb.net/test?retryWrites=true&w=majority";
-
+// mongodb+srv://dato:<password>@cluster0.m8xlq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 const client = new MongoClient(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
