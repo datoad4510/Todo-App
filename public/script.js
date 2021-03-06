@@ -14,6 +14,9 @@ async function fetchList() {
 
 function dateToDatetimeLocal(string) {
     // https://stackoverflow.com/questions/28760254/assign-javascript-date-to-html5-datetime-local-input
+    if (string == "Invalid Date") {
+        return "";
+    }
     let temp = new Date(string).toISOString();
     return temp.substring(0, temp.length - 1);
 }
