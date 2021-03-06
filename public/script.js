@@ -12,6 +12,12 @@ async function fetchList() {
         .catch((err) => console.log(err));
 }
 
+function dateToDatetimeLocal(string) {
+    // https://stackoverflow.com/questions/28760254/assign-javascript-date-to-html5-datetime-local-input
+    let temp = new Date(string).toISOString();
+    return temp.substring(0, temp.length - 1);
+}
+
 function putInList(todo) {
     const node = document.createElement("li");
 
@@ -81,7 +87,7 @@ function putInList(todo) {
         // add date to be edited
         const edit_datetime_local = document.createElement("input");
         edit_datetime_local.type = "datetime-local";
-        edit_datetime_local.value = this_date.innerText;
+        edit_datetime_local.value = dateToDatetimeLocal(this_date.innerText);
         edit_container.appendChild(edit_datetime_local);
 
         // add save button
